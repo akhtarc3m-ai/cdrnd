@@ -1,0 +1,19 @@
+name: Sync Folder to Laptop
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy dist folder to laptop
+        shell: powershell
+        run: |
+          $source = "$env:GITHUB_WORKSPACE\dist"
+          $dest   = "C:\RnD\getfromgithub"
+          robocopy $source $dest /MIR
+          if ($LASTEXITCODE -ge 8) { exit 1 } else { exit 0 }
